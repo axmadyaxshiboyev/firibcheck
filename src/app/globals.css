@@ -75,6 +75,8 @@
     animation: shine 3.2s ease-in-out infinite;
   }
   .text-gradient {
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
     background: linear-gradient(100deg, #2563eb 0%, #3b9eff 55%, #2563eb 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text;
@@ -82,19 +84,19 @@
     color: transparent;
     animation: gradient-flow 6s ease-in-out infinite;
   }
-  .prose-fc h2 {
+  .prose-fc h2:not(:where(.not-prose, .not-prose *)) {
     @apply mt-14 text-2xl font-semibold tracking-tight text-ink md:text-3xl;
   }
-  .prose-fc h3 {
+  .prose-fc h3:not(:where(.not-prose, .not-prose *)) {
     @apply mt-8 text-lg font-semibold text-ink;
   }
-  .prose-fc p {
+  .prose-fc p:not(:where(.not-prose, .not-prose *)) {
     @apply mt-3 leading-relaxed text-ink-soft;
   }
-  .prose-fc ul {
+  .prose-fc ul:not(:where(.not-prose, .not-prose *)) {
     @apply mt-3 list-disc space-y-2 pl-5 text-ink-soft;
   }
-  .prose-fc a {
+  .prose-fc a:not(:where(.not-prose, .not-prose *)) {
     @apply font-medium text-brand underline decoration-brand/30 underline-offset-4 hover:decoration-brand;
   }
 }
