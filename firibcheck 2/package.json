@@ -1,0 +1,46 @@
+{
+  "name": "firibcheck",
+  "version": "1.0.0",
+  "description": "FiribCheck — shubhali xabarlarni tekshirish",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test:engine": "node --experimental-strip-types scripts/test-engine.ts",
+    "typecheck": "tsc --noEmit",
+    "benchmark": "node --experimental-strip-types scripts/benchmark.ts",
+    "predev": "node scripts/copy-ocr.mjs",
+    "prebuild": "node scripts/copy-ocr.mjs",
+    "audit:prod": "npm audit --omit=dev"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@tesseract.js-data/rus": "^1.0.0",
+    "@tesseract.js-data/uzb": "^1.0.0",
+    "@tesseract.js-data/uzb_cyrl": "^1.0.0",
+    "fflate": "^0.8.2",
+    "framer-motion": "^12.43.0",
+    "lucide-react": "^1.58.0",
+    "next": "^15.5.28",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tesseract.js": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.30",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=18.18"
+  },
+  "overrides": {
+    "postcss": "^8.5.30"
+  }
+}
