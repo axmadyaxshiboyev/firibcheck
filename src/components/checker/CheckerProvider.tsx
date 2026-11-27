@@ -89,7 +89,7 @@ export function CheckerProvider({ children }: { children: ReactNode }) {
       const found = SAMPLES.find((x) => x.id === s);
       const fromType = p.get("matn");
       if (found) setTextState(found.text);
-      else if (fromType) setTextState(fromType.slice(0, 4000));
+      else if (fromType) setTextState(fromType.slice(0, MAX_LEN));
       setTimeout(scrollToChecker, 400);
     }
   }, []);

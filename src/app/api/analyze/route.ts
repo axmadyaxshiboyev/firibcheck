@@ -16,7 +16,7 @@ import { analyze, validate, MAX_LENGTH } from "@/lib/analyzer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAX_BODY = 16 * 1024;
+const MAX_BODY = 48 * 1024;
 const IP_LIMIT = 20;
 const IP_WINDOW_S = 10 * 60;
 const DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT || 2000);

@@ -48,7 +48,7 @@ export interface ValidationError {
   error: string;
 }
 
-export const MAX_LENGTH = 4000;
+export const MAX_LENGTH = 10000;
 
 /* ------------------------------------------------------------------ */
 /* Normalizatsiya                                                       */
