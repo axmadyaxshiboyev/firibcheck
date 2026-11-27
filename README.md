@@ -92,3 +92,11 @@ Logo `src/components/Logo.tsx` da vektor (SVG) ko'rinishida — intro animatsiya
 ## Manbalar
 
 Statistika: IIV matbuot anjumani, 2026-yil 9-oktabr ([spot.uz](https://www.spot.uz/oz/2026/10/12/cybercrime/), [anhor.uz](https://anhor.uz/uzl/news/kiberjinoyatlar-zarar-trillion-som)). Phishing bo'yicha: [csec.uz](https://csec.uz/uz/news/maqolalar/phishing-veb-saytlardan-ogoh-bo-ling).
+
+## Fayl tekshiruvi
+
+"Fayl" tabida quyidagilarni tekshirish mumkin (hammasi brauzer ichida, fayl serverga yuborilmaydi):
+
+- **APK** — AndroidManifest.xml dagi ruxsatlar statik tekshiriladi (SMS, Accessibility, qurilma administratori, overlay, boshqa APK o'rnatish), ichma-ich APK/DEX va "hujjat.pdf.apk" kabi nomlar aniqlanadi, SHA-256 ko'rsatiladi. **Bu virus tekshiruvi emas**: kod bajarilmaydi va ichi tahlil qilinmaydi.
+- **DOCX, TXT, EML, CSV, HTML** — matn ajratib olinib, oddiy xabar kabi tahlil qilinadi.
+- PDF hozircha qo'llab-quvvatlanmaydi.

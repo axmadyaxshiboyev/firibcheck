@@ -81,6 +81,7 @@ export function Hero() {
       style={{ animationDelay: `${i * 50}ms` }}
     >
       {w}
+      <span className="sr-only"> </span>
     </span>
   );
 
@@ -195,7 +196,7 @@ export function Hero() {
               value={value}
               onChange={(e) => { setValue(e.target.value); setErr(null); }}
               onPaste={(e) => { const f = Array.from(e.clipboardData.files || [])[0]; if (f) { e.preventDefault(); pickFile(f); } }}
-              placeholder={tab === "link" ? "https://… havolani joylashtiring" : tab === "image" ? "Rasm tanlash uchun bosing yoki Ctrl+V" : "Shubhali xabarni joylashtiring yoki rasm yuklang…"}
+              placeholder={tab === "link" ? "https://… havolani joylashtiring" : tab === "image" ? "Rasm tanlash uchun bosing yoki Ctrl+V" : "Shubhali xabarni shu yerga joylang…"}
               className="h-12 min-w-0 flex-1 bg-transparent px-3 text-[16px] text-ink outline-none placeholder:text-ink-faint md:text-[17px]"
               onFocus={() => { if (tab === "image") fileRef.current?.click(); }}
               readOnly={tab === "image"}

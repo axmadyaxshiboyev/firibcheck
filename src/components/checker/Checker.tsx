@@ -2,24 +2,27 @@
 
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, BriefcaseBusiness, CreditCard, Gift, ImageUp, Link2, LoaderCircle, Lock, ScanSearch, ShieldCheck, TriangleAlert, Type, Upload, X, Bot } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, CreditCard, Gift, ImageUp, Link2, LoaderCircle, Lock, ScanSearch, ShieldCheck, TriangleAlert, Type, Upload, X, Bot, FileText } from "lucide-react";
 import { useChecker, type Mode } from "./CheckerProvider";
 import { ResultCard } from "./ResultCard";
 import { SAMPLES } from "@/lib/samples";
 import { MAX_LENGTH } from "@/lib/analyzer";
 import { SectionHead } from "../Reveal";
 import { cn } from "@/lib/cn";
+import { FILE_ACCEPT } from "@/lib/files";
 
 const TABS: { id: Mode; label: string; icon: typeof Type }[] = [
   { id: "text", label: "Matn", icon: Type },
   { id: "link", label: "Havola", icon: Link2 },
   { id: "image", label: "Skrinshot", icon: ImageUp },
+  { id: "file", label: "Fayl", icon: FileText },
 ];
 const SAMPLE_ICONS: Record<string, typeof Gift> = { prize: Gift, job: BriefcaseBusiness, card: CreditCard };
 
 export function Checker() {
   const c = useChecker();
   const fileRef = useRef<HTMLInputElement>(null);
+  const docRef = useRef<HTMLInputElement>(null);
   const [drag, setDrag] = useState(false);
   const loading = c.status === "loading";
   const ocr = c.status === "ocr";
@@ -44,7 +47,7 @@ export function Checker() {
           id="tekshiruv-title"
           eyebrow="Tekshiruv"
           title="Shubhali xabarni tekshiring"
-          sub="Xabar matnini, havolani yoki skrinshotni kiriting. FiribCheck xavf belgilarini tahlil qilib, natijani tushuntiradi."
+          sub="Xabar matnini, havolani, skrinshotni yoki faylni kiriting. FiribCheck xavf belgilarini tahlil qilib, natijani tushuntiradi."
         />
 
         <div className="mt-12 grid grid-cols-1 items-start gap-6 lg:mt-14 lg:grid-cols-2 [&>*]:min-w-0">
@@ -58,11 +61,11 @@ export function Checker() {
             onPaste={onPaste}
             onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
             onDragLeave={() => setDrag(false)}
-            onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files?.[0]; if (f) c.handleImage(f); }}
+            onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files?.[0]; if (f) c.handleFile(f); }}
           >
             <div className="flex items-center justify-between">
               <label htmlFor="fc-input" className="text-[15px] font-semibold">
-                {c.mode === "image" ? "Skrinshot orqali tekshirish" : c.mode === "link" ? "Havola" : "Xabar matni yoki havola"}
+                {c.mode === "image" ? "Skrinshot orqali tekshirish" : c.mode === "file" ? "Fayl orqali tekshirish" : c.mode === "link" ? "Havola" : "Xabar matni yoki havola"}
               </label>
               <button type="button" onClick={c.reset} className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm font-medium text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink">
                 <X size={15} /> Tozalash
@@ -77,14 +80,45 @@ export function Checker() {
                   type="button"
                   aria-selected={c.mode === t.id}
                   onClick={() => c.setMode(t.id)}
-                  className={cn("relative flex flex-1 items-center justify-center gap-1.5 rounded-[10px] py-2.5 text-sm font-semibold transition-colors", c.mode === t.id ? "text-ink" : "text-ink-soft hover:text-ink")}
+                  className={cn("relative flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-1 py-2.5 text-[13px] font-semibold transition-colors sm:text-sm", c.mode === t.id ? "text-ink" : "text-ink-soft hover:text-ink")}
                 >
                   {c.mode === t.id && <motion.span layoutId="checker-tab" className="absolute inset-0 rounded-[10px] bg-white shadow-sm" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
-                  <t.icon size={16} className="relative" />
+                  <t.icon size={16} className="relative max-[430px]:hidden" />
                   <span className="relative">{t.label}</span>
                 </button>
               ))}
             </div>
+
+            {/* FAYL REJIMI */}
+            <AnimatePresence initial={false}>
+              {c.mode === "file" && (
+                <motion.div key="file" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                  {!c.file ? (
+                    <button
+                      type="button"
+                      onClick={() => docRef.current?.click()}
+                      className={cn("flex w-full flex-col items-center justify-center gap-3 rounded-2xl border-[1.5px] border-dashed px-6 py-9 text-center transition-colors", drag ? "border-brand bg-brand-soft" : "border-[#93B4FF] bg-brand-soft/60 hover:bg-brand-soft")}
+                    >
+                      <span className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-brand shadow-sm"><FileText size={24} /></span>
+                      <span className="text-base font-semibold">Faylni shu yerga tashlang</span>
+                      <span className="text-sm text-ink-soft">APK (ruxsatlar tekshiriladi), DOCX, TXT, EML<br />Fayl brauzeringizdan chiqmaydi</span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-4 rounded-2xl border border-line p-3">
+                      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-surface-2 text-brand"><FileText size={22} /></span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold">{c.file.name}</p>
+                        <p className="mt-1 text-[13px] font-medium text-ink-soft">{c.file.busy ? "O'qilmoqda…" : `${c.file.size >= 1048576 ? (c.file.size / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(c.file.size / 1024)) + " KB"} · ${c.file.kind === "apk" ? "ruxsatlar tekshirildi" : "matn olindi"}`}</p>
+                      </div>
+                      <button type="button" onClick={c.clearFile} aria-label="Faylni olib tashlash" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface-2 text-ink-soft hover:text-ink">
+                        <X size={15} />
+                      </button>
+                    </div>
+                  )}
+                  <input ref={docRef} type="file" accept={FILE_ACCEPT} className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) c.handleFile(f); e.target.value = ""; }} />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* RASM REJIMI */}
             <AnimatePresence initial={false}>
@@ -134,16 +168,16 @@ export function Checker() {
               )}
             </AnimatePresence>
 
-            {(c.mode !== "image" || (c.image && !ocr)) && (
+            {((c.mode !== "image" && c.mode !== "file") || (c.mode === "image" && c.image && !ocr) || (c.mode === "file" && c.file?.kind === "text" && !c.file.busy)) && (
               <div className="relative">
-                {c.mode === "image" && <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-soft">Rasmdan olingan matn · tahrirlash mumkin</p>}
+                {(c.mode === "image" || c.mode === "file") && <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-soft">{c.mode === "file" ? "Fayldan olingan matn" : "Rasmdan olingan matn"} · tahrirlash mumkin</p>}
                 <textarea
                   id="fc-input"
                   value={c.text}
                   onChange={(e) => c.setText(e.target.value.slice(0, MAX_LENGTH))}
                   onKeyDown={(e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") c.run(); }}
                   placeholder={c.mode === "link" ? "https://… shubhali havolani joylashtiring" : "Shubhali SMS yoki Telegram xabarini shu yerga joylashtiring..."}
-                  rows={c.mode === "link" ? 3 : c.mode === "image" ? 5 : 8}
+                  rows={c.mode === "link" ? 3 : c.mode === "image" || c.mode === "file" ? 5 : 8}
                   aria-invalid={!!c.error}
                   aria-describedby="fc-help"
                   className={cn(
@@ -165,7 +199,7 @@ export function Checker() {
 
             {c.mode === "text" && (
               <button type="button" onClick={() => c.setMode("image")} className="-mt-1 flex items-center gap-2 rounded-xl bg-brand-soft px-3.5 py-3 text-left text-[13px] font-medium text-brand transition-colors hover:bg-[#E2EDFF]">
-                <ImageUp size={16} className="shrink-0" /> Skrinshot bo'lsa — "Skrinshot" tabini tanlang yoki rasmni shu yerga tashlang.
+                <ImageUp size={16} className="shrink-0" /> Skrinshot yoki fayl (APK, DOCX, TXT) bo'lsa, tegishli tabni tanlang yoki uni shu yerga tashlang.
               </button>
             )}
 
@@ -197,9 +231,9 @@ export function Checker() {
             <div className="flex flex-col-reverse items-stretch justify-between gap-4 border-t border-line pt-5 sm:flex-row sm:items-center">
               <p id="fc-help" className="flex items-start gap-2 text-xs leading-relaxed text-ink-soft sm:max-w-[300px]">
                 <Lock size={14} className="mt-0.5 shrink-0" />
-                {c.aiOn && c.aiAvailable ? "Matn qoidalar asosida brauzeringizda va AI xizmatida tahlil qilinadi. Rasm faqat brauzeringizda o'qiladi." : "Matn va rasm faqat brauzeringizda, qoidalar asosida tahlil qilinadi va saqlanmaydi."}
+                {c.aiOn && c.aiAvailable ? "Matn qoidalar asosida brauzeringizda va AI xizmatida tahlil qilinadi. Rasm faqat brauzeringizda o'qiladi." : "Matn, rasm va fayl faqat brauzeringizda, qoidalar asosida tahlil qilinadi va saqlanmaydi."}
               </p>
-              <button type="button" onClick={() => c.run()} disabled={loading || ocr} className="btn-primary btn-shine min-w-[170px]">
+              <button type="button" onClick={() => c.run()} disabled={loading || ocr || (c.mode === "file" && c.file?.kind === "apk")} className="btn-primary btn-shine min-w-[170px]">
                 {loading ? (<><LoaderCircle size={18} className="animate-spin" /> Tahlil qilinmoqda…</>) : ocr ? (<><ScanSearch size={18} /> Rasm o'qilmoqda…</>) : (<>Tekshirish <ArrowRight size={18} /></>)}
               </button>
             </div>
